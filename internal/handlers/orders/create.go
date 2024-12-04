@@ -2,6 +2,7 @@ package orders
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"users/internal/models/dto"
@@ -18,6 +19,12 @@ func CreateOrder(uc usecase.OrdersUseCase) http.HandlerFunc {
 			httpErr.InternalError(w, err)
 			return
 		}
+
+		if err := order.IsValid(); err != nil {
+			httpErr.BadRequest(w, fmt.Errorf("is invalid %w", err))
+			return
+		}
+
 		orderID, err := uc.CreateOrder(r.Context(), order)
 		if err != nil {
 			httpErr.InternalError(w, err)

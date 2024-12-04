@@ -1,5 +1,7 @@
 package dto
 
+import "errors"
+
 type UpdateOrder struct {
 	ID     int    `json:"id"`
 	Status string `json:"status"`
@@ -11,8 +13,12 @@ type CreateOrder struct {
 	PaymentID  string      `json:"paymentID"`
 }
 
-func (d CreateOrder) IsValid() bool {
-	return len(d.Items) != 0
+func (d *CreateOrder) IsValid() error {
+	if len(d.Items) == 0 {
+		return errors.New("empty items")
+	}
+
+	return nil
 }
 
 type Order struct {
