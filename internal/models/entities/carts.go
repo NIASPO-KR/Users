@@ -1,11 +1,6 @@
 package entities
 
-type CartItem struct {
-	ItemID string `db:"item_id"`
-	Count  int    `db:"count"`
-}
-
 type UpdateCartItem struct {
-	CartItem
+	ItemCount
 	UserID string `db:"user_id"`
 }

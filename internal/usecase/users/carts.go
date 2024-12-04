@@ -24,13 +24,13 @@ func NewCartsUseCase(
 	}
 }
 
-func (cuc *cartsUseCase) GetCarts(ctx context.Context) ([]dto.CartItem, error) {
+func (cuc *cartsUseCase) GetCarts(ctx context.Context) ([]dto.ItemCount, error) {
 	carts, err := cuc.cartsRepository.GetCartByUserID(ctx, usecase.MockUsername)
 	if err != nil {
-		return nil, fmt.Errorf("repo get cart by user if: %w", err)
+		return nil, fmt.Errorf("repo get cart by user id: %w", err)
 	}
 
-	return cuc.cartsConverter.ToCartItemDTOs(carts), nil
+	return cuc.cartsConverter.ToItemCountDTOs(carts), nil
 }
 
 func (cuc *cartsUseCase) UpdateCartItem(ctx context.Context, newCartItem dto.UpdateCartItem) error {

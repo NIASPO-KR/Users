@@ -13,7 +13,7 @@ CREATE INDEX idx_cart_item_id ON carts(item_id);
 CREATE TYPE status_type AS ENUM ('В работе', 'Доставляется', 'Получен', 'Отменен', 'Отказ');
 CREATE TABLE orders
 (
-    id      VARCHAR(36) PRIMARY KEY,
+    id      SERIAL PRIMARY KEY,
     user_id VARCHAR(36) NOT NULL DEFAULT 'GOLBUTSA-1337-1487-911Z-Salla4VO2022',
     status  status_type NOT NULL DEFAULT 'В работе'
 );
@@ -22,7 +22,7 @@ CREATE INDEX idx_orders_user_id ON orders(user_id);
 
 CREATE TABLE orders_items
 (
-    order_id VARCHAR(36) NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
+    order_id INTEGER     NOT NULL REFERENCES orders (id) ON DELETE CASCADE,
     item_id  VARCHAR(36) NOT NULL,
     count    INTEGER     NOT NULL
         CONSTRAINT check_positive_count CHECK (count > 0)

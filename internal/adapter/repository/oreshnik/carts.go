@@ -28,7 +28,7 @@ func NewCartsRepository(
 	}
 }
 
-func (r *cartsRepository) GetCartByUserID(ctx context.Context, userID string) ([]entities.CartItem, error) {
+func (r *cartsRepository) GetCartByUserID(ctx context.Context, userID string) ([]entities.ItemCount, error) {
 	qb := r.db.Builder.Select(
 		"item_id",
 		"count",
@@ -41,7 +41,7 @@ func (r *cartsRepository) GetCartByUserID(ctx context.Context, userID string) ([
 		return nil, fmt.Errorf("to sql %w", err)
 	}
 
-	var cartItems []entities.CartItem
+	var cartItems []entities.ItemCount
 	if err := r.db.SqlxDB().SelectContext(ctx, &cartItems, query, args...); err != nil {
 		return nil, fmt.Errorf("select %w", err)
 	}

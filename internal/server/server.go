@@ -24,10 +24,12 @@ type Server struct {
 	oreshnikDB *postgres.Postgres
 
 	// repositories
-	cartsRepository repository.CartsRepository
+	cartsRepository  repository.CartsRepository
+	ordersRepository repository.OrdersRepository
 
 	// services
-	cartsUseCase usecase.CartsUseCase
+	cartsUseCase  usecase.CartsUseCase
+	ordersUseCase usecase.OrdersUseCase
 
 	router *chi.Mux
 	server *http.Server
@@ -74,10 +76,12 @@ func (s *Server) initDB() error {
 
 func (s *Server) initRepositories() {
 	s.cartsRepository = oreshnik.NewCartsRepository(s.oreshnikDB)
+	s.ordersRepository = oreshnik.NewOrdersRepository(s.oreshnikDB)
 }
 
 func (s *Server) initUseCases() {
 	s.cartsUseCase = users.NewCartsUseCase(s.cartsRepository)
+	s.ordersUseCase = users.NewOrdersUseCase(s.ordersRepository)
 }
 
 func (s *Server) initHTTPServer() {

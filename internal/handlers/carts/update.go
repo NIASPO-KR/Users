@@ -14,7 +14,7 @@ import (
 
 func UpdateCart(uc usecase.CartsUseCase) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var cartItem dto.CartItem
+		var cartItem dto.ItemCount
 
 		if err := json.NewDecoder(r.Body).Decode(&cartItem); err != nil {
 			httpErr.InternalError(w, err)
@@ -22,15 +22,15 @@ func UpdateCart(uc usecase.CartsUseCase) http.HandlerFunc {
 		}
 
 		err := uc.UpdateCartItem(r.Context(), dto.UpdateCartItem{
-			CartItem: cartItem,
-			UserID:   usecase.MockUsername,
+			ItemCount: cartItem,
+			UserID:    usecase.MockUsername,
 		})
 		if err != nil {
 			if errors.Is(err, errs.ErrNotFound) {
 				httpErr.NotFound(w, err)
 				return
 			}
-			httpErr.BadRequest(w, err)
+			httpErr.InternalError(w, err)
 			return
 		}
 

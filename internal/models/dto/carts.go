@@ -1,11 +1,6 @@
 package dto
 
-type CartItem struct {
-	ItemID string `json:"itemID"`
-	Count  int    `json:"count"`
-}
-
 type UpdateCartItem struct {
-	CartItem
+	ItemCount
 	UserID string `json:"userID"`
 }
