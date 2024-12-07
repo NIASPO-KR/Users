@@ -7,8 +7,10 @@ import (
 )
 
 type CartsRepository interface {
+	CreateCartItem(ctx context.Context, cartItem entities.UpdateCartItem) error
 	GetCartByUserID(ctx context.Context, userID string) ([]entities.ItemCount, error)
 	UpdateCartItem(ctx context.Context, newCartItem entities.UpdateCartItem) error
+	DeleteCartItem(ctx context.Context, cartItemID string) error
 }
 
 type OrdersRepository interface {

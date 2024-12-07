@@ -28,6 +28,40 @@ func NewCartsRepository(
 	}
 }
 
+func (r *cartsRepository) CreateCartItem(ctx context.Context, cartItem entities.UpdateCartItem) error {
+	qb := r.db.Builder.
+		Insert(cartsTable).
+		Columns(
+			"item_id",
+			"count",
+		).
+		Values(
+			cartItem.ItemID,
+			cartItem.Count,
+		)
+
+	query, args, err := qb.ToSql()
+	if err != nil {
+		return fmt.Errorf("to sql: %w", err)
+	}
+
+	res, err := r.db.SqlxDB().ExecContext(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("exec: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return fmt.Errorf("no rows affected: %w", err)
+	}
+
+	return nil
+}
+
 func (r *cartsRepository) GetCartByUserID(ctx context.Context, userID string) ([]entities.ItemCount, error) {
 	qb := r.db.Builder.Select(
 		"item_id",
@@ -56,6 +90,33 @@ func (r *cartsRepository) UpdateCartItem(ctx context.Context, newCartItem entiti
 			"item_id": newCartItem.ItemID,
 			"user_id": newCartItem.UserID,
 		})
+
+	query, args, err := qb.ToSql()
+	if err != nil {
+		return fmt.Errorf("to sql: %w", err)
+	}
+
+	res, err := r.db.SqlxDB().ExecContext(ctx, query, args...)
+	if err != nil {
+		return fmt.Errorf("exec: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return fmt.Errorf("rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return errs.ErrNotFound
+	}
+
+	return nil
+}
+
+func (r *cartsRepository) DeleteCartItem(ctx context.Context, cartItemID string) error {
+	qb := r.db.Builder.
+		Delete(cartsTable).
+		Where(squirrel.Eq{"item_id": cartItemID})
 
 	query, args, err := qb.ToSql()
 	if err != nil {
